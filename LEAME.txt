@@ -1,0 +1,9 @@
+SUMMIT ESP OFFLINE WEB PWA
+
+La instalación PWA requiere publicar esta carpeta completa en un sitio HTTPS. Abrir index.html directamente permite ejecutar la calculadora, pero no instalar el service worker.
+
+ANDROID: Abra la URL HTTPS en Chrome o Edge, seleccione Instalar y luego use el icono Summit ESP.
+
+iPHONE/iPAD: Abra la URL HTTPS en Safari, seleccione Compartir, Añadir a pantalla de inicio y abra el icono Summit ESP.
+
+Después de una primera carga completa desde HTTPS, los archivos esenciales quedan disponibles offline.
