@@ -1,1 +1,68 @@
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='summitESP';const factors={'6':[.6765,.1765],'16mm':[.6,0],'4':[.4535,.1163],'2':[.2714,.0286],'1':[.2143,-1e-14],'1/O':[.1864,-1e-14],'2/O':[.15,0]};const n=k=>Number($(`[data-k="${k}"]`)?.value)||0;const f=(x,d=0)=>Number.isFinite(x)?x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';function sync(){$$('[data-sync]').forEach(e=>e.value=$(`[data-k="${e.dataset.sync}"]`)?.value||'')}function row(i,t,v,u,formula){return `<div class="row"><b>${i}</b><div>${t}<small class="formula">${formula}</small></div><div class="value">${i===4?f(v,2):f(Math.round(v))} ${u||''}</div></div>`}function calc(){sync();let[p,q]=factors[$('[data-k="awg"]').value],a=n('ma'),t=n('temp'),l=n('length'),mx=n('maxHz'),rt=n('ratedHz'),v=n('mv'),av=n('available'),dr=n('drive'),tf=.0021*t+.84,drop=(p*a+q)*tf*l/1000,vmax=v*mx/rt+drop,ratio=av/dr,vr=vmax*rt/mx,vsc=vr/ratio,il=a*ratio,ul=il*(1-n('under')/100),ol=il*(1+n('over')/100),syncI=a*1.25*ratio,start=a*1.5*ratio,kva=vmax*a*Math.sqrt(3)/1000,trq=n('hp')*5252/n('rpm');let w=[];[['hp',n('hp'),10,1000],['mv',v,230,5000],['ma',a,1,1000],['length',l,100,25000],['temp',t,100,300],['maxHz',mx,30,130],['minHz',n('minHz'),30,130]].forEach(x=>{if(x[1]<x[2]||x[1]>x[3])w.push(`${x[0]} fuera de rango habitual`)});if(n('minHz')>=mx)w.push('MIN HZ debe ser menor que MAX HZ');$('#status').className='status '+(w.length?'warning':'ok');$('#status').textContent=w.length?`CONFIGURATION WITH WARNINGS (${w.length})`:'CONFIGURATION VALID';$('#warnings').hidden=!w.length;$('#warnings').innerHTML=w.map(x=>`⚠ ${x}`).join('<br>');$('#engineeringPanel').textContent=`AWG ${$('[data-k="awg"]').value} | Factor 1 ${p} | Factor 2 ${q} | Temp correction ${tf}`;$('#results').innerHTML=[row(1,'Voltage Drop',drop,'V',`(${p}×${a}+${q})×(0.0021×${t}+0.84)×${l}/1000`),row(2,'Volts @ Max HZ',vmax,'V',`${v}×${mx}/${rt}+${drop}`),row(3,'Available Volts',av,'V','Input'),row(4,'Transformer Ratio',ratio,'',`${av}/${dr}`),row(5,'Volts @ Rated Hz',vr,'V',`${vmax}×${rt}/${mx}`),row(6,'VSC Output Volts',vsc,'V',`${vr}/${ratio}`),row(7,'I Limit',il,'A',`${a}×${ratio}`),row(8,'Underload',ul,'A','Full resolution'),row(9,'Overload',ol,'A','Full resolution'),row(10,'I Limit Sync',syncI,'A','Full resolution'),row(11,'Start Overload',start,'A','Full resolution'),row(12,'KVA',kva,'kVA','Full resolution'),row(13,'Motor Rated Torque',trq,'ft-lb','Full resolution')].join('')}$$('[data-k]').forEach(e=>e.addEventListener('input',calc));$$('nav [data-tab]').forEach(b=>b.onclick=()=>{$$('nav [data-tab],.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#'+b.dataset.tab).classList.add('active')});$('#fieldMode').onclick=()=>{document.body.className='field-mode';$('#fieldMode').classList.add('active');$('#engineeringMode').classList.remove('active');$('#engineeringPanel').hidden=true};$('#engineeringMode').onclick=()=>{document.body.className='engineering-mode';$('#engineeringMode').classList.add('active');$('#fieldMode').classList.remove('active');$('#engineeringPanel').hidden=false};$('#save').onclick=()=>localStorage.setItem(key,JSON.stringify(Object.fromEntries($$('[data-k]').map(e=>[e.dataset.k,e.value]))));$('#export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.fromEntries($$('[data-k]').map(e=>[e.dataset.k,e.value])),null,2)],{type:'application/json'}));a.download='summit-job.json';a.click()};$('#import').onchange=async e=>{let d=JSON.parse(await e.target.files[0].text());Object.entries(d).forEach(([k,v])=>{let x=$(`[data-k="${k}"]`);if(x)x.value=v});calc()};$('#print').onclick=()=>{$('#reportBody').innerHTML=`<p>Customer: ${$('[data-k="customer"]').value} | Field: ${$('[data-k="field"]').value} | Well: ${$('[data-k="well"]').value}</p><p>Date: ${$('[data-k="date"]').value} | Technician: ${$('[data-k="tech"]').value} | SK Job: ${$('[data-k="sk"]').value}</p>${$('#results').innerHTML}<h3>Warnings</h3><p>${$('#warnings').innerText||'No warnings detected'}</p>`;document.body.classList.add('printing');window.print();document.body.classList.remove('printing')};$('#aboutBtn').onclick=()=>$('#about').showModal();$('#closeAbout').onclick=()=>$('#about').close();let saved=JSON.parse(localStorage.getItem(key)||'{}');Object.entries(saved).forEach(([k,v])=>{let e=$(`[data-k="${k}"]`);if(e)e.value=v});calc();let deferred=null,ban=$('#installBanner'),ios=/iphone|ipad|ipod/i.test(navigator.userAgent),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;if('serviceWorker'in navigator&&location.protocol!=='file:')addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(!standalone)ban.hidden=false});if(ios&&!standalone){$('#installText').textContent='En Safari: Compartir > Añadir a pantalla de inicio';$('#installBtn').hidden=true;ban.hidden=false}if(location.protocol==='file:'){ $('#installText').textContent='Para instalar como PWA, publique esta carpeta en HTTPS.';$('#installBtn').hidden=true;ban.hidden=false}$('#installBtn').onclick=async()=>{if(deferred){deferred.prompt();await deferred.userChoice;ban.hidden=true}};$('#dismissInstall').onclick=()=>ban.hidden=true;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],key='summitESP';const factors={'6':[.6765,.1765],'16mm':[.6,0],'4':[.4535,.1163],'2':[.2714,.0286],'1':[.2143,-1e-14],'1/O':[.1864,-1e-14],'2/O':[.15,0]};const n=k=>Number($(`[data-k="${k}"]`)?.value)||0;const f=(x,d=0)=>Number.isFinite(x)?x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';function sync(){$$('[data-sync]').forEach(e=>e.value=$(`[data-k="${e.dataset.sync}"]`)?.value||'')}function row(i,t,v,u,formula){return `<div class="row"><b>${i}</b><div>${t}<small class="formula">${formula}</small></div><div class="value">${i===4?f(v,2):f(Math.round(v))} ${u||''}</div></div>`}function calc(){sync();let[p,q]=factors[$('[data-k="awg"]').value],a=n('ma'),t=n('temp'),l=n('length'),mx=n('maxHz'),rt=n('ratedHz'),v=n('mv'),av=n('available'),dr=n('drive'),tf=.0021*t+.84,drop=(p*a+q)*tf*l/1000,vmax=v*mx/rt+drop,ratio=av/dr,vr=vmax*rt/mx,vsc=vr/ratio,il=a*ratio,ul=il*(1-n('under')/100),ol=il*(1+n('over')/100),syncI=a*1.25*ratio,start=a*1.5*ratio,kva=vmax*a*Math.sqrt(3)/1000,trq=n('hp')*5252/n('rpm');let w=[];[['hp',n('hp'),10,1000],['mv',v,230,5000],['ma',a,1,1000],['length',l,100,25000],['temp',t,100,300],['maxHz',mx,30,130],['minHz',n('minHz'),30,130]].forEach(x=>{if(x[1]<x[2]||x[1]>x[3])w.push(`${x[0]} fuera de rango habitual`)});if(n('minHz')>=mx)w.push('MIN HZ debe ser menor que MAX HZ');$('#status').className='status '+(w.length?'warning':'ok');$('#status').textContent=w.length?`CONFIGURATION WITH WARNINGS (${w.length})`:'CONFIGURATION VALID';$('#warnings').hidden=!w.length;$('#warnings').innerHTML=w.map(x=>`⚠ ${x}`).join('<br>');$('#engineeringPanel').textContent=`AWG ${$('[data-k="awg"]').value} | Factor 1 ${p} | Factor 2 ${q} | Temp correction ${tf}`;$('#results').innerHTML=[row(1,'Voltage Drop',drop,'V',`(${p}×${a}+${q})×(0.0021×${t}+0.84)×${l}/1000`),row(2,'Volts @ Max HZ',vmax,'V',`${v}×${mx}/${rt}+${drop}`),row(3,'Available Volts',av,'V','Input'),row(4,'Transformer Ratio',ratio,'',`${av}/${dr}`),row(5,'Volts @ Rated Hz',vr,'V',`${vmax}×${rt}/${mx}`),row(6,'VSC Output Volts',vsc,'V',`${vr}/${ratio}`),row(7,'I Limit',il,'A',`${a}×${ratio}`),row(8,'Underload',ul,'A','Full resolution'),row(9,'Overload',ol,'A','Full resolution'),row(10,'I Limit Sync',syncI,'A','Full resolution'),row(11,'Start Overload',start,'A','Full resolution'),row(12,'KVA',kva,'kVA','Full resolution'),row(13,'Motor Rated Torque',trq,'ft-lb','Full resolution')].join('')}$$('[data-k]').forEach(e=>e.addEventListener('input',calc));$$('nav [data-tab]').forEach(b=>b.onclick=()=>{$$('nav [data-tab],.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('#'+b.dataset.tab).classList.add('active')});$('#fieldMode').onclick=()=>{document.body.className='field-mode';$('#fieldMode').classList.add('active');$('#engineeringMode').classList.remove('active');$('#engineeringPanel').hidden=true};$('#engineeringMode').onclick=()=>{document.body.className='engineering-mode';$('#engineeringMode').classList.add('active');$('#fieldMode').classList.remove('active');$('#engineeringPanel').hidden=false};$('#save').onclick=()=>localStorage.setItem(key,JSON.stringify(Object.fromEntries($$('[data-k]').map(e=>[e.dataset.k,e.value]))));$('#export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(Object.fromEntries($$('[data-k]').map(e=>[e.dataset.k,e.value])),null,2)],{type:'application/json'}));a.download='summit-job.json';a.click()};$('#import').onchange=async e=>{let d=JSON.parse(await e.target.files[0].text());Object.entries(d).forEach(([k,v])=>{let x=$(`[data-k="${k}"]`);if(x)x.value=v});calc()};$('#print').onclick=()=>{$('#reportBody').innerHTML=`<p>Customer: ${$('[data-k="customer"]').value} | Field: ${$('[data-k="field"]').value} | Well: ${$('[data-k="well"]').value}</p><p>Date: ${$('[data-k="date"]').value} | Technician: ${$('[data-k="tech"]').value} | SK Job: ${$('[data-k="sk"]').value}</p>${$('#results').innerHTML}<h3>Warnings</h3><p>${$('#warnings').innerText||'No warnings detected'}</p>`;document.body.classList.add('printing');window.print();document.body.classList.remove('printing')};$('#aboutBtn').onclick=()=>$('#about').showModal();$('#closeAbout').onclick=()=>$('#about').close();let saved=JSON.parse(localStorage.getItem(key)||'{}');Object.entries(saved).forEach(([k,v])=>{let e=$(`[data-k="${k}"]`);if(e)e.value=v});calc();let deferred=null;
+const ban=$('#installBanner');
+const installBtn=$('#installBtn');
+const installText=$('#installText');
+const dismissInstall=$('#dismissInstall');
+const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+
+// Register the service worker whenever the app is served from HTTPS/localhost.
+if('serviceWorker' in navigator&&location.protocol!=='file:'){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+}
+
+// Installed PWAs never show installation guidance.
+if(standalone){
+  if(ban) ban.hidden=true;
+}else{
+  // Android/Chromium installation prompt.
+  window.addEventListener('beforeinstallprompt',event=>{
+    if(ios) return;
+    event.preventDefault();
+    deferred=event;
+    if(ban){
+      ban.hidden=false;
+      if(installText) installText.textContent='Instalar Summit ESP para uso offline';
+      if(installBtn) installBtn.hidden=false;
+    }
+  });
+
+  // iPhone/iPad uses Safari Share > Add to Home Screen.
+  if(ios&&ban){
+    ban.innerHTML=`
+      <div style="padding:12px;width:100%;line-height:1.55;font-size:14px;position:relative">
+        <button id="closeIosGuide" type="button" aria-label="Close" style="position:absolute;right:4px;top:0;background:transparent;color:#445;font-size:24px;padding:4px 8px">×</button>
+        <div style="font-size:18px;font-weight:bold;color:#c00000;margin:0 34px 12px 0">📱 Install Summit ESP on iPhone</div>
+        <div style="background:#f5f5f5;border-radius:8px;padding:12px;margin-bottom:10px">
+          <div><b>1.</b> Tap <b>Share</b> (□↑)</div>
+          <div style="margin-top:8px"><b>2.</b> Tap <b>Add to Home Screen</b></div>
+          <div style="margin-top:8px"><b>3.</b> Tap <b>Add</b></div>
+        </div>
+        <div style="font-size:13px;color:#555">Open Summit ESP from the new Home Screen icon. This guide will not appear inside the installed app.</div>
+      </div>`;
+    ban.hidden=false;
+    $('#closeIosGuide')?.addEventListener('click',()=>{ban.hidden=true});
+  }
+
+  // Local files can run, but cannot be installed as a PWA.
+  if(location.protocol==='file:'&&ban){
+    if(installText) installText.textContent='Para instalar como PWA, publique esta carpeta mediante HTTPS.';
+    if(installBtn) installBtn.hidden=true;
+    ban.hidden=false;
+  }
+
+  installBtn?.addEventListener('click',async()=>{
+    if(!deferred) return;
+    deferred.prompt();
+    const choice=await deferred.userChoice;
+    deferred=null;
+    if(choice.outcome==='accepted'&&ban) ban.hidden=true;
+  });
+  dismissInstall?.addEventListener('click',()=>{if(ban) ban.hidden=true});
+}
+
+window.addEventListener('appinstalled',()=>{
+  deferred=null;
+  if(ban) ban.hidden=true;
+});
+
