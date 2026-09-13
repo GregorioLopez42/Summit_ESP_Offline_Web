@@ -1,13 +1,11 @@
-SUMMIT ESP OFFLINE WEB - PWA FINAL
+SUMMIT ESP OFFLINE WEB PWA
 
-PUBLICACION
-Suba todos los archivos y la carpeta icons al nivel principal del repositorio GitHub Pages. La URL debe usar HTTPS.
+La instalación PWA requiere publicar esta carpeta completa en un sitio HTTPS. Abrir index.html directamente permite ejecutar la calculadora, pero no instalar el service worker.
 
-ANDROID
-Abra la URL en Chrome o Edge. Use el botón Instalar. Después de instalar, abra Summit ESP desde el icono; el banner de instalación ya no aparecerá.
+ANDROID: Abra la URL HTTPS en Chrome o Edge, seleccione Instalar y luego use el icono Summit ESP.
 
-iPHONE / iPAD
-Abra la URL en Safari. La aplicación mostrará una guía: Share, Add to Home Screen, Add. Después abra Summit ESP desde el icono; la guía ya no aparecerá dentro de la aplicación instalada.
+iPHONE/iPAD: Abra la URL HTTPS en Safari, seleccione Compartir, Añadir a pantalla de inicio y abra el icono Summit ESP.
 
-ACTUALIZACION
-El service worker utiliza una nueva versión de caché y elimina cachés anteriores al activarse.
+Después de una primera carga completa desde HTTPS, los archivos esenciales quedan disponibles offline.
+
+LIMPIAR: borra el almacenamiento local, pone entradas numéricas en cero, deja datos de texto/fecha vacíos y resalta en rojo todo dato requerido pendiente.
