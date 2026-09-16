@@ -1,13 +1,6 @@
-SUMMIT ESP PWA v1.0
+SUMMIT ESP PWA FINAL
 
-PUBLICACION
-Suba toda esta carpeta a un sitio HTTPS, por ejemplo GitHub Pages. Mantenga la carpeta icons y todos los archivos en la misma estructura.
-
-ANDROID
-Abra la URL HTTPS en Chrome o Edge. Use el botón Instalar. Después de la instalación, abra Summit ESP desde el icono. El aviso de instalación no aparece dentro de la app instalada.
-
-iPHONE / iPAD
-Abra la URL HTTPS en Safari. Seleccione Share, Add to Home Screen y Add. Abra Summit ESP desde el icono. La guía no aparece dentro de la app instalada.
-
-OFFLINE
-Abra la aplicación una vez con conexión para almacenar los recursos. Después podrá abrirse sin conexión.
+Publicar todos los archivos y la carpeta icons mediante HTTPS.
+ANDROID: abrir en Chrome/Edge y pulsar Instalar.
+iPHONE/iPAD: abrir en Safari, Share, Add to Home Screen, Add.
+OFFLINE: abrir una vez con conexión antes de probar modo avión.

@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Summit ESP Offline Web",
   "short_name": "Summit ESP",
-  "description": "VSD CALCS offline for Summit ESP field operations.",
+  "description": "VSD CALCS offline para operaciones Summit ESP.",
   "lang": "es",
   "start_url": "./index.html",
   "scope": "./",
