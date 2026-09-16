@@ -1,0 +1,1 @@
+Responsive breakpoints: 900 px and 650 px. At 650 px, all input groups use one column and result rows use a two-column stacked layout. PDF button opens a dedicated printable window; on iPhone use the print preview Share action to save the PDF.
