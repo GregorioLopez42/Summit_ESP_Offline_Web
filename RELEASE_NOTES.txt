@@ -1,2 +1,1 @@
-Desktop Release Candidate
-Validated normal drive (160 kVA), limited drive (120 kVA), and extreme limited drive (75 kVA). Current-limit source is shown for I Limit, Overload, I Limit Sync, Start Overload, and Underload.
+Restored the proven in-page print workflow from the attached legacy version: populate hidden #report, add body.printing, call window.print(), then restore the app view. All current drive KVA, manual current +10%, Available Volts advisory, responsive layout and bilingual features are retained.
