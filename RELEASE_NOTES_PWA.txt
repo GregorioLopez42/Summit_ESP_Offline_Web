@@ -1,0 +1,1 @@
+PWA v1.0 basada en Desktop RC. Conserva Drive Capacity kVA, Normal/Drive Limited Mode, validaciones normal/120 kVA/75 kVA, idiomas, persistencia, PDF y fórmulas de ingeniería.

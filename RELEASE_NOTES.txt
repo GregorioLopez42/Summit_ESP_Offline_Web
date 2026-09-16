@@ -1,0 +1,2 @@
+Desktop Release Candidate
+Validated normal drive (160 kVA), limited drive (120 kVA), and extreme limited drive (75 kVA). Current-limit source is shown for I Limit, Overload, I Limit Sync, Start Overload, and Underload.

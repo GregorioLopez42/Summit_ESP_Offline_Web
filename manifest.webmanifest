@@ -2,11 +2,16 @@
   "id": "./",
   "name": "Summit ESP Offline Web",
   "short_name": "Summit ESP",
-  "description": "Herramienta offline para cálculos VSD CALCS.",
+  "description": "VSD CALCS offline for Summit ESP field operations.",
   "lang": "es",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#162c3d",
   "prefer_related_applications": false,
