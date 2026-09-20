@@ -1,0 +1,1 @@
+1. Open Voltage Drop tab. 2. Pinch with two fingers: image scales continuously from 1x to 4x. 3. Drag with one finger while zoomed. 4. Double tap toggles between 1x and 2x. 5. +/- buttons change by 0.5x. 6. Reset returns to 1x. Installation guidance: Android uses browser Install prompt; iPhone uses Safari Share > Add to Home Screen.
