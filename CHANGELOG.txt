@@ -1,0 +1,1 @@
+Only change: added informational Cable Voltage Drop / Caída de voltaje tab using cable_voltage_drop_4K.png. Asset is included in the service-worker offline cache. Existing calculations and PDF flow are retained.
