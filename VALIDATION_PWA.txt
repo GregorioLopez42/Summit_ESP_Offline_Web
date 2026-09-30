@@ -1,0 +1,1 @@
+MIN Hz: >=50% Motor Nameplate Hz and < MAX Hz. Voltage Drop viewer: pinch 1x-4x, pan, double tap, +/- and reset. Android install prompt. iPhone Safari Share > Add to Home Screen.
