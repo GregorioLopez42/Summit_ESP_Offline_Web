@@ -1,0 +1,1 @@
+Final SUT structure; mandatory MIN Hz; constrained Voltage Drop pan; bilingual install instructions; expanded A4 landscape PDF; Android/iOS PWA assets cached offline.
