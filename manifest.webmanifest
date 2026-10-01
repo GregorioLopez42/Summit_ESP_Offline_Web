@@ -1,12 +1,12 @@
 {
   "id": "./",
-  "name": "Summit ESP Offline Web RC10",
+  "name": "Summit ESP Offline Web RC10 Aesthetic",
   "short_name": "Summit ESP",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#162c3d",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "icons/icon-192.png",
